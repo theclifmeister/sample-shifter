@@ -21,6 +21,7 @@ Sample Shifter automatically categorizes files into the following categories:
 - **vocals**: vocal shots, acapellas, choirs, shouts
 - **fx**: risers, downsweeps, whooshes, impacts, noise
 - **percussion**: shakers, congas, bongos, tambourines, cowbells
+- **melodic**: piano, guitar, bells, strings, brass, woodwinds, arpeggios
 - **loops**: drum loops, phrases, beats
 - **oneshots**: one-shot samples, hits, stabs
 - **uncategorized**: files that don't match any category

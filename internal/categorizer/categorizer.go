@@ -38,6 +38,7 @@ var categoryPriority = []Category{
 	CategoryPercussion,
 	CategoryVocal,
 	CategorySynth,
+	CategoryMelodic,
 	CategoryFX,
 	CategoryLoop,
 	CategoryOneShot,
@@ -64,6 +65,11 @@ var keywords = map[Category][]string{
 	},
 	CategoryPercussion: {
 		"perc", "percussion", "shaker", "conga", "bongo", "tambourine", "cowbell",
+	},
+	CategoryMelodic: {
+		"piano", "guitar", "bell", "marimba", "xylophone", "harp", "strings",
+		"violin", "cello", "flute", "horn", "trumpet", "sax", "saxophone",
+		"organ", "keys", "brass", "woodwind", "arpeggio", "arpeggiated", "melody",
 	},
 	CategoryLoop: {
 		"loop", "phrase", "bar", "beat",
