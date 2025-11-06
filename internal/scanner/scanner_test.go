@@ -12,8 +12,8 @@ func TestScanDirectory(t *testing.T) {
 
 	// Create test files
 	testFiles := []struct {
-		name      string
-		isAudio   bool
+		name    string
+		isAudio bool
 	}{
 		{"kick.wav", true},
 		{"snare.mp3", true},
@@ -35,7 +35,7 @@ func TestScanDirectory(t *testing.T) {
 	if err := os.MkdirAll(subDir, 0755); err != nil {
 		t.Fatalf("Failed to create subdirectory: %v", err)
 	}
-	
+
 	subFile := filepath.Join(subDir, "vocal.ogg")
 	if err := os.WriteFile(subFile, []byte{}, 0644); err != nil {
 		t.Fatalf("Failed to create subdirectory file: %v", err)
@@ -90,7 +90,7 @@ func TestScanNonexistentDirectory(t *testing.T) {
 func TestAudioExtensions(t *testing.T) {
 	// Verify that common audio extensions are included
 	expectedExts := []string{".wav", ".mp3", ".flac", ".aif", ".aiff"}
-	
+
 	for _, ext := range expectedExts {
 		found := false
 		for _, audioExt := range AudioExtensions {

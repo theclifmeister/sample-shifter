@@ -47,7 +47,7 @@ var categoryPriority = []Category{
 var keywords = map[Category][]string{
 	CategoryDrum: {
 		"kick", "snare", "hihat", "hi-hat", "clap", "tom", "cymbal", "crash", "ride",
-		"drum", "bd", "sd", "hh", "ch", "oh",
+		"drum", "bd", "sd", "hh",
 	},
 	CategoryBass: {
 		"bass", "sub", "808", "909",
