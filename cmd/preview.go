@@ -1,0 +1,109 @@
+package cmd
+
+import (
+	"encoding/json"
+	"fmt"
+	"os"
+	"path/filepath"
+
+	"github.com/spf13/cobra"
+	"github.com/theclifmeister/sample-shifter/internal/categorizer"
+	"github.com/theclifmeister/sample-shifter/internal/scanner"
+)
+
+var (
+	targetDir  string
+	outputFile string
+)
+
+var previewCmd = &cobra.Command{
+	Use:   "preview [source-directory]",
+	Short: "Preview how files will be categorized and organized",
+	Long: `Preview the categorization of audio files without making any changes.
+This shows where each file will be copied to when you run the apply command.`,
+	Args: cobra.ExactArgs(1),
+	Run: func(cmd *cobra.Command, args []string) {
+		sourceDir := args[0]
+
+		// Verify source directory exists
+		if _, err := os.Stat(sourceDir); os.IsNotExist(err) {
+			fmt.Printf("Error: Directory '%s' does not exist\n", sourceDir)
+			os.Exit(1)
+		}
+
+		if targetDir == "" {
+			fmt.Println("Error: --target flag is required")
+			os.Exit(1)
+		}
+
+		fmt.Printf("Scanning: %s\n", sourceDir)
+		fmt.Printf("Target: %s\n\n", targetDir)
+
+		// Scan for sample files
+		samples, err := scanner.ScanDirectory(sourceDir)
+		if err != nil {
+			fmt.Printf("Error scanning directory: %v\n", err)
+			os.Exit(1)
+		}
+
+		if len(samples) == 0 {
+			fmt.Println("No audio sample files found.")
+			return
+		}
+
+		// Categorize files
+		categorized := categorizer.CategorizeBatch(samples, targetDir)
+
+		// Group by category
+		categoryGroups := make(map[categorizer.Category][]categorizer.CategorizedFile)
+		for _, cat := range categorized {
+			categoryGroups[cat.Category] = append(categoryGroups[cat.Category], cat)
+		}
+
+		// Display preview
+		fmt.Printf("Preview: Found %d file(s) to categorize\n\n", len(categorized))
+
+		for category, files := range categoryGroups {
+			fmt.Printf("Category: %s (%d files)\n", category, len(files))
+			for _, file := range files {
+				fmt.Printf("  %s\n    -> %s\n", file.Sample.OriginalPath, file.TargetPath)
+			}
+			fmt.Println()
+		}
+
+		// Save preview to file if requested
+		if outputFile != "" {
+			savePreview(categorized, outputFile)
+		}
+	},
+}
+
+func savePreview(categorized []categorizer.CategorizedFile, filename string) {
+	data, err := json.MarshalIndent(categorized, "", "  ")
+	if err != nil {
+		fmt.Printf("Error creating preview file: %v\n", err)
+		return
+	}
+
+	// Ensure directory exists
+	dir := filepath.Dir(filename)
+	if dir != "." && dir != "" {
+		if err := os.MkdirAll(dir, 0755); err != nil {
+			fmt.Printf("Error creating directory for preview file: %v\n", err)
+			return
+		}
+	}
+
+	if err := os.WriteFile(filename, data, 0644); err != nil {
+		fmt.Printf("Error saving preview file: %v\n", err)
+		return
+	}
+
+	fmt.Printf("Preview saved to: %s\n", filename)
+	fmt.Println("Use this file with the 'apply' command to execute the categorization.")
+}
+
+func init() {
+	previewCmd.Flags().StringVarP(&targetDir, "target", "t", "", "Target directory for organized samples (required)")
+	previewCmd.Flags().StringVarP(&outputFile, "output", "o", "", "Save preview to JSON file for later use with apply command")
+}
