@@ -19,7 +19,7 @@ Sample Shifter automatically categorizes files into the following categories:
 - **bass**: bass sounds, sub bass, 808s, 909s
 - **synth**: synth leads, pads, plucks, and other synthesizer sounds
 - **vocals**: vocal shots, acapellas, choirs, shouts
-- **fx**: risers, downsweps, whooshes, impacts, noise
+- **fx**: risers, downsweeps, whooshes, impacts, noise
 - **percussion**: shakers, congas, bongos, tambourines, cowbells
 - **loops**: drum loops, phrases, beats
 - **oneshots**: one-shot samples, hits, stabs

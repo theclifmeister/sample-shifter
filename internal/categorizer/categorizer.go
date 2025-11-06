@@ -30,6 +30,19 @@ type CategorizedFile struct {
 	TargetPath string
 }
 
+// categoryPriority defines the order in which categories are checked
+// Categories earlier in the list have higher priority
+var categoryPriority = []Category{
+	CategoryDrum,
+	CategoryBass,
+	CategoryPercussion,
+	CategoryVocal,
+	CategorySynth,
+	CategoryFX,
+	CategoryLoop,
+	CategoryOneShot,
+}
+
 // keywords maps category keywords to categories
 var keywords = map[Category][]string{
 	CategoryDrum: {
@@ -65,19 +78,7 @@ func Categorize(sample scanner.SampleFile, targetDir string) CategorizedFile {
 	fileName := strings.ToLower(sample.FileName)
 	nameWithoutExt := strings.ToLower(strings.TrimSuffix(sample.FileName, sample.Extension))
 
-	category := CategoryUncategorized
-
-	// Check if filename contains any keywords
-	for cat, words := range keywords {
-		for _, word := range words {
-			if strings.Contains(fileName, word) || strings.Contains(nameWithoutExt, word) {
-				category = cat
-				goto categorized
-			}
-		}
-	}
-
-categorized:
+	category := determineCategory(fileName, nameWithoutExt)
 	targetPath := filepath.Join(targetDir, string(category), sample.FileName)
 
 	return CategorizedFile{
@@ -85,6 +86,20 @@ categorized:
 		Category:   category,
 		TargetPath: targetPath,
 	}
+}
+
+// determineCategory checks the filename against category keywords in priority order
+func determineCategory(fileName, nameWithoutExt string) Category {
+	// Check categories in priority order to ensure deterministic results
+	for _, cat := range categoryPriority {
+		words := keywords[cat]
+		for _, word := range words {
+			if strings.Contains(fileName, word) || strings.Contains(nameWithoutExt, word) {
+				return cat
+			}
+		}
+	}
+	return CategoryUncategorized
 }
 
 // CategorizeBatch categorizes multiple sample files

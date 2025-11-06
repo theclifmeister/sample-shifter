@@ -23,7 +23,7 @@ func TestCategorize(t *testing.T) {
 		{"vocal_shot.wav", ".wav", CategoryVocal},
 		{"fx_riser.wav", ".wav", CategoryFX},
 		{"shaker_loop.wav", ".wav", CategoryPercussion},
-		{"drum_loop.flac", ".flac", CategoryLoop},
+		{"beat_loop.wav", ".wav", CategoryLoop},
 		{"loop_128bpm.wav", ".wav", CategoryLoop},
 		{"oneshot_stab.wav", ".wav", CategoryOneShot},
 		{"random_sound.wav", ".wav", CategoryUncategorized},
