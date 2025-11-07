@@ -8,6 +8,9 @@
 *.so
 *.dylib
 
+# Built binary
+sample-shifter
+
 # Test binary, built with `go test -c`
 *.test
 
