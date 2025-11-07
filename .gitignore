@@ -33,3 +33,7 @@ go.work.sum
 # Editor/IDE
 # .idea/
 # .vscode/
+.DS_Store
+big-sample-shift-preview-improved.json
+big-sample-shift-preview.json
+ss

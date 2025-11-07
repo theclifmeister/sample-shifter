@@ -12,8 +12,9 @@ import (
 )
 
 var (
-	targetDir  string
-	outputFile string
+	targetDir          string
+	outputFile         string
+	normalizeFilenames bool
 )
 
 var previewCmd = &cobra.Command{
@@ -52,7 +53,7 @@ This shows where each file will be copied to when you run the apply command.`,
 		}
 
 		// Categorize files
-		categorized := categorizer.CategorizeBatch(samples, targetDir)
+		categorized := categorizer.CategorizeBatch(samples, targetDir, normalizeFilenames)
 
 		// Group by category
 		categoryGroups := make(map[categorizer.Category][]categorizer.CategorizedFile)
@@ -106,4 +107,5 @@ func savePreview(categorized []categorizer.CategorizedFile, filename string) {
 func init() {
 	previewCmd.Flags().StringVarP(&targetDir, "target", "t", "", "Target directory for organized samples (required)")
 	previewCmd.Flags().StringVarP(&outputFile, "output", "o", "", "Save preview to JSON file for later use with apply command")
+	previewCmd.Flags().BoolVar(&normalizeFilenames, "normalize", false, "Normalize filenames (lowercase, spaces and underscores to dashes)")
 }
