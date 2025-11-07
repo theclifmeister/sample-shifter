@@ -13,9 +13,10 @@ import (
 )
 
 var (
-	applyTargetDir string
-	previewFile    string
-	dryRun         bool
+	applyTargetDir            string
+	previewFile               string
+	dryRun                    bool
+	applyNormalizeFilenames   bool
 )
 
 var applyCmd = &cobra.Command{
@@ -69,7 +70,7 @@ or use a previously generated preview file.`,
 				os.Exit(1)
 			}
 
-			categorized = categorizer.CategorizeBatch(samples, applyTargetDir)
+			categorized = categorizer.CategorizeBatch(samples, applyTargetDir, applyNormalizeFilenames)
 		}
 
 		if len(categorized) == 0 {
@@ -149,4 +150,5 @@ func init() {
 	applyCmd.Flags().StringVarP(&applyTargetDir, "target", "t", "", "Target directory for organized samples")
 	applyCmd.Flags().StringVarP(&previewFile, "preview-file", "p", "", "Use a previously saved preview file")
 	applyCmd.Flags().BoolVar(&dryRun, "dry-run", false, "Preview what would be done without actually copying files")
+	applyCmd.Flags().BoolVar(&applyNormalizeFilenames, "normalize", false, "Normalize filenames (lowercase, spaces and underscores to dashes)")
 }
