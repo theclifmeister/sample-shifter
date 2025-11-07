@@ -1,5 +1,8 @@
 # Sample Shifter
 
+[![Test and Lint](https://github.com/theclifmeister/sample-shifter/actions/workflows/test.yml/badge.svg)](https://github.com/theclifmeister/sample-shifter/actions/workflows/test.yml)
+[![Release](https://github.com/theclifmeister/sample-shifter/actions/workflows/release.yml/badge.svg)](https://github.com/theclifmeister/sample-shifter/actions/workflows/release.yml)
+
 A simple CLI tool to organize audio sample files by automatically categorizing them based on their names.
 
 ## Features
