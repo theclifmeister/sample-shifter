@@ -129,7 +129,7 @@ go build -o sample-shifter .
 ### Adding a New Audio Format
 
 1. Add extension to `AudioExtensions` in `internal/scanner/scanner.go`
-2. Ensure extension is lowercase with leading dot (e.g., `.opus`)
+2. Ensure extension is lowercase with leading dot (e.g., `.opus` for a new format)
 3. Add test case in `internal/scanner/scanner_test.go`
 4. Update README.md supported formats list
 
