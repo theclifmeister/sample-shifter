@@ -30,6 +30,12 @@ or use a previously generated preview file.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		var categorized []categorizer.CategorizedFile
 
+		// Require --target flag in all cases
+		if applyTargetDir == "" {
+			fmt.Println("Error: --target flag is required")
+			os.Exit(1)
+		}
+
 		// Load from preview file if provided
 		if previewFile != "" {
 			data, err := os.ReadFile(previewFile)
@@ -48,11 +54,6 @@ or use a previously generated preview file.`,
 			// Scan and categorize on-the-fly
 			if len(args) != 1 {
 				fmt.Println("Error: source directory required when not using --preview-file")
-				os.Exit(1)
-			}
-
-			if applyTargetDir == "" {
-				fmt.Println("Error: --target flag is required")
 				os.Exit(1)
 			}
 
@@ -80,33 +81,14 @@ or use a previously generated preview file.`,
 			return
 		}
 
-		// Determine target directory for cleaning
-		var targetDirForClean string
-		if applyTargetDir != "" {
-			targetDirForClean = applyTargetDir
-		} else if len(categorized) > 0 {
-			// Extract target directory from first categorized file's path
-			targetDirForClean = filepath.Dir(filepath.Dir(categorized[0].TargetPath))
-			// If there's a subcategory, go up one more level
-			if categorized[0].Subcategory != "" {
-				targetDirForClean = filepath.Dir(targetDirForClean)
-			}
-		}
-
 		// Clean target directory if requested
-		if cleanTarget {
-			if targetDirForClean == "" {
-				fmt.Println("Error: Target directory for cleaning is empty. Aborting clean operation.")
+		if cleanTarget && !dryRun {
+			if err := cleanDirectory(applyTargetDir); err != nil {
+				fmt.Printf("Error: %v\n", err)
 				os.Exit(1)
 			}
-			if !dryRun {
-				if err := cleanDirectory(targetDirForClean); err != nil {
-					fmt.Printf("Error: %v\n", err)
-					os.Exit(1)
-				}
-			} else {
-				fmt.Printf("\n[DRY RUN] Would clean target directory: %s\n", targetDirForClean)
-			}
+		} else if cleanTarget && dryRun {
+			fmt.Printf("\n[DRY RUN] Would clean target directory: %s\n", applyTargetDir)
 		}
 
 		if dryRun {
@@ -211,7 +193,7 @@ func copyFile(src, dst string) error {
 }
 
 func init() {
-	applyCmd.Flags().StringVarP(&applyTargetDir, "target", "t", "", "Target directory for organized samples")
+	applyCmd.Flags().StringVarP(&applyTargetDir, "target", "t", "", "Target directory for organized samples (required)")
 	applyCmd.Flags().StringVarP(&previewFile, "preview-file", "p", "", "Use a previously saved preview file")
 	applyCmd.Flags().BoolVar(&dryRun, "dry-run", false, "Preview what would be done without actually copying files")
 	applyCmd.Flags().BoolVar(&applyNormalizeFilenames, "normalize", false, "Normalize filenames (lowercase, spaces and underscores to dashes)")
