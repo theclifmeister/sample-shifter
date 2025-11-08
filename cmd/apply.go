@@ -6,6 +6,7 @@ import (
 	"io"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"github.com/spf13/cobra"
 	"github.com/theclifmeister/sample-shifter/internal/categorizer"
@@ -14,11 +15,11 @@ import (
 )
 
 var (
-	applyTargetDir            string
-	previewFile               string
-	dryRun                    bool
-	applyNormalizeFilenames   bool
-	cleanTarget               bool
+	applyTargetDir          string
+	previewFile             string
+	dryRun                  bool
+	applyNormalizeFilenames bool
+	cleanTarget             bool
 )
 
 var applyCmd = &cobra.Command{
@@ -161,7 +162,7 @@ func cleanDirectory(targetDir string) error {
 	var response string
 	fmt.Scanln(&response)
 
-	if response != "yes" {
+	if strings.ToLower(strings.TrimSpace(response)) != "yes" {
 		return fmt.Errorf("cleaning cancelled by user")
 	}
 
