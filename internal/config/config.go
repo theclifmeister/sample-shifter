@@ -44,7 +44,10 @@ func LoadConfig(configPath string) (*CategoryConfig, error) {
 	return &config, nil
 }
 
-// validateConfig checks that the configuration is valid
+// validateConfig checks that the given CategoryConfig is valid.
+// It ensures that there is at least one category, each category has a non-empty name,
+// no duplicate category names exist, and each category has at least one keyword.
+// Returns an error describing the first validation failure encountered, or nil if valid.
 func validateConfig(config *CategoryConfig) error {
 	if len(config.Categories) == 0 {
 		return fmt.Errorf("configuration must contain at least one category")
