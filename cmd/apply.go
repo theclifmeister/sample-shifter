@@ -10,6 +10,7 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/theclifmeister/sample-shifter/internal/categorizer"
 	"github.com/theclifmeister/sample-shifter/internal/scanner"
+	"github.com/theclifmeister/sample-shifter/internal/stats"
 )
 
 var (
@@ -114,6 +115,10 @@ or use a previously generated preview file.`,
 		if dryRun {
 			fmt.Println("\nThis was a dry run. Use without --dry-run to actually copy files.")
 		}
+
+		// Display statistics
+		fmt.Println()
+		stats.DisplayStats(categorized)
 	},
 }
 
