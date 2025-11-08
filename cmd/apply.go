@@ -94,13 +94,19 @@ or use a previously generated preview file.`,
 		}
 
 		// Clean target directory if requested
-		if cleanTarget && !dryRun {
-			if err := cleanDirectory(targetDirForClean); err != nil {
-				fmt.Printf("Error: %v\n", err)
+		if cleanTarget {
+			if targetDirForClean == "" {
+				fmt.Println("Error: Target directory for cleaning is empty. Aborting clean operation.")
 				os.Exit(1)
 			}
-		} else if cleanTarget && dryRun {
-			fmt.Printf("\n[DRY RUN] Would clean target directory: %s\n", targetDirForClean)
+			if !dryRun {
+				if err := cleanDirectory(targetDirForClean); err != nil {
+					fmt.Printf("Error: %v\n", err)
+					os.Exit(1)
+				}
+			} else {
+				fmt.Printf("\n[DRY RUN] Would clean target directory: %s\n", targetDirForClean)
+			}
 		}
 
 		if dryRun {
