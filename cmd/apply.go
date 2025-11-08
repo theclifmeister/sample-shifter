@@ -18,6 +18,7 @@ var (
 	previewFile               string
 	dryRun                    bool
 	applyNormalizeFilenames   bool
+	cleanTarget               bool
 )
 
 var applyCmd = &cobra.Command{
@@ -79,6 +80,29 @@ or use a previously generated preview file.`,
 			return
 		}
 
+		// Determine target directory for cleaning
+		var targetDirForClean string
+		if applyTargetDir != "" {
+			targetDirForClean = applyTargetDir
+		} else if len(categorized) > 0 {
+			// Extract target directory from first categorized file's path
+			targetDirForClean = filepath.Dir(filepath.Dir(categorized[0].TargetPath))
+			// If there's a subcategory, go up one more level
+			if categorized[0].Subcategory != "" {
+				targetDirForClean = filepath.Dir(targetDirForClean)
+			}
+		}
+
+		// Clean target directory if requested
+		if cleanTarget && !dryRun {
+			if err := cleanDirectory(targetDirForClean); err != nil {
+				fmt.Printf("Error: %v\n", err)
+				os.Exit(1)
+			}
+		} else if cleanTarget && dryRun {
+			fmt.Printf("\n[DRY RUN] Would clean target directory: %s\n", targetDirForClean)
+		}
+
 		if dryRun {
 			fmt.Println("\n=== DRY RUN MODE - No files will be copied ===")
 		}
@@ -122,6 +146,35 @@ or use a previously generated preview file.`,
 	},
 }
 
+func cleanDirectory(targetDir string) error {
+	// Check if directory exists
+	if _, err := os.Stat(targetDir); os.IsNotExist(err) {
+		// Directory doesn't exist, nothing to clean
+		return nil
+	}
+
+	// Ask for confirmation
+	fmt.Printf("\n⚠️  WARNING: This will delete all contents in:\n")
+	fmt.Printf("   %s\n\n", targetDir)
+	fmt.Print("Are you sure you want to continue? Type 'yes' to confirm: ")
+
+	var response string
+	fmt.Scanln(&response)
+
+	if response != "yes" {
+		return fmt.Errorf("cleaning cancelled by user")
+	}
+
+	// Remove the directory and all its contents
+	fmt.Printf("\nCleaning target directory: %s\n", targetDir)
+	if err := os.RemoveAll(targetDir); err != nil {
+		return fmt.Errorf("failed to clean directory: %w", err)
+	}
+
+	fmt.Println("Target directory cleaned successfully.")
+	return nil
+}
+
 func copyFile(src, dst string) error {
 	// Create target directory if it doesn't exist
 	targetDir := filepath.Dir(dst)
@@ -156,4 +209,5 @@ func init() {
 	applyCmd.Flags().StringVarP(&previewFile, "preview-file", "p", "", "Use a previously saved preview file")
 	applyCmd.Flags().BoolVar(&dryRun, "dry-run", false, "Preview what would be done without actually copying files")
 	applyCmd.Flags().BoolVar(&applyNormalizeFilenames, "normalize", false, "Normalize filenames (lowercase, spaces and underscores to dashes)")
+	applyCmd.Flags().BoolVar(&cleanTarget, "clean", false, "Clean target directory before copying files (requires confirmation)")
 }

@@ -20,7 +20,8 @@ func TestCategorize(t *testing.T) {
 		{"808_bass.wav", ".wav", CategoryBass},
 		{"synth_lead.wav", ".wav", CategorySynth},
 		{"synth_pad.mp3", ".mp3", CategorySynth},
-		{"vocal_shot.wav", ".wav", CategoryVocal},
+		{"vocal_shot.wav", ".wav", CategoryOneShot}, // "shot" keyword has higher priority (OneShot category)
+		{"vocal_sample.wav", ".wav", CategoryVocal},
 		{"fx_riser.wav", ".wav", CategoryFX},
 		{"shaker_loop.wav", ".wav", CategoryPercussion},
 		{"piano_chord.wav", ".wav", CategoryMelodic},
@@ -43,7 +44,7 @@ func TestCategorize(t *testing.T) {
 				Extension:    tt.extension,
 			}
 
-			result := Categorize(sample, targetDir)
+			result := Categorize(sample, targetDir, false)
 
 			if result.Category != tt.expectedCategory {
 				t.Errorf("Expected category %s for %s, got %s",
@@ -69,7 +70,7 @@ func TestCategorizeBatch(t *testing.T) {
 	}
 
 	targetDir := "/tmp/test-target"
-	categorized := CategorizeBatch(samples, targetDir)
+	categorized := CategorizeBatch(samples, targetDir, false)
 
 	if len(categorized) != len(samples) {
 		t.Errorf("Expected %d categorized files, got %d", len(samples), len(categorized))
@@ -107,7 +108,7 @@ func TestCategorizeCaseInsensitive(t *testing.T) {
 				Extension:    ".wav",
 			}
 
-			result := Categorize(sample, targetDir)
+			result := Categorize(sample, targetDir, false)
 
 			if result.Category != tt.expected {
 				t.Errorf("Case-insensitive matching failed: expected %s for %s, got %s",
