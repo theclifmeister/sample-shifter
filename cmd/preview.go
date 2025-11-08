@@ -9,6 +9,7 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/theclifmeister/sample-shifter/internal/categorizer"
 	"github.com/theclifmeister/sample-shifter/internal/scanner"
+	"github.com/theclifmeister/sample-shifter/internal/stats"
 )
 
 var (
@@ -55,111 +56,14 @@ This shows where each file will be copied to when you run the apply command.`,
 		// Categorize files
 		categorized := categorizer.CategorizeBatch(samples, targetDir, normalizeFilenames)
 
-		// Group by category and subcategory
-		categoryGroups := make(map[categorizer.Category][]categorizer.CategorizedFile)
-		subcategoryGroups := make(map[categorizer.Category]map[string][]categorizer.CategorizedFile)
-
-		for _, cat := range categorized {
-			categoryGroups[cat.Category] = append(categoryGroups[cat.Category], cat)
-
-			if subcategoryGroups[cat.Category] == nil {
-				subcategoryGroups[cat.Category] = make(map[string][]categorizer.CategorizedFile)
-			}
-			subcatKey := cat.Subcategory
-			if subcatKey == "" {
-				subcatKey = "(no subcategory)"
-			}
-			subcategoryGroups[cat.Category][subcatKey] = append(subcategoryGroups[cat.Category][subcatKey], cat)
-		}
-
-		totalFiles := len(categorized)
-
 		// Display initial summary
-		fmt.Printf("Preview: Found %d file(s) to categorize\n\n", totalFiles)
-
-		// Sort categories by count (descending)
-		type categoryCount struct {
-			category categorizer.Category
-			count    int
-		}
-		var categoryCounts []categoryCount
-		for cat, files := range categoryGroups {
-			categoryCounts = append(categoryCounts, categoryCount{cat, len(files)})
-		}
-		// Simple bubble sort by count
-		for i := 0; i < len(categoryCounts)-1; i++ {
-			for j := 0; j < len(categoryCounts)-i-1; j++ {
-				if categoryCounts[j].count < categoryCounts[j+1].count {
-					categoryCounts[j], categoryCounts[j+1] = categoryCounts[j+1], categoryCounts[j]
-				}
-			}
-		}
+		fmt.Printf("Preview: Found %d file(s) to categorize\n\n", len(categorized))
 
 		// Display detailed file list first
-		fmt.Println("=== DETAILED FILE LIST ===")
-		fmt.Println()
-
-		for _, cc := range categoryCounts {
-			category := cc.category
-			files := categoryGroups[category]
-			fmt.Printf("Category: %s (%d files)\n", category, len(files))
-			for _, file := range files {
-				fmt.Printf("  %s\n    -> %s\n", file.Sample.OriginalPath, file.TargetPath)
-			}
-			fmt.Println()
-		}
+		stats.DisplayDetailedFileList(categorized)
 
 		// Display statistics summary at the end
-		fmt.Println("=== CATEGORIZATION STATISTICS ===")
-		fmt.Println()
-
-		// Display category statistics
-		fmt.Printf("%-20s %10s %10s\n", "Category", "Count", "Percentage")
-		fmt.Println("--------------------------------------------------")
-
-		for _, cc := range categoryCounts {
-			percentage := float64(cc.count) * 100.0 / float64(totalFiles)
-			fmt.Printf("%-20s %10d %9.1f%%\n", cc.category, cc.count, percentage)
-		}
-		fmt.Println()
-
-		// Display subcategory statistics for each category
-		fmt.Println("=== SUBCATEGORY BREAKDOWN ===")
-		fmt.Println()
-
-		for _, cc := range categoryCounts {
-			category := cc.category
-			categoryTotal := cc.count
-			subcats := subcategoryGroups[category]
-
-			fmt.Printf("%s (%d files)\n", category, categoryTotal)
-			fmt.Printf("  %-30s %10s %10s\n", "Subcategory", "Count", "% of Cat")
-			fmt.Println("  --------------------------------------------------")
-
-			// Sort subcategories by count
-			type subcatCount struct {
-				name  string
-				count int
-			}
-			var subcatCounts []subcatCount
-			for subcat, files := range subcats {
-				subcatCounts = append(subcatCounts, subcatCount{subcat, len(files)})
-			}
-			// Simple bubble sort
-			for i := 0; i < len(subcatCounts)-1; i++ {
-				for j := 0; j < len(subcatCounts)-i-1; j++ {
-					if subcatCounts[j].count < subcatCounts[j+1].count {
-						subcatCounts[j], subcatCounts[j+1] = subcatCounts[j+1], subcatCounts[j]
-					}
-				}
-			}
-
-			for _, sc := range subcatCounts {
-				percentage := float64(sc.count) * 100.0 / float64(categoryTotal)
-				fmt.Printf("  %-30s %10d %9.1f%%\n", sc.name, sc.count, percentage)
-			}
-			fmt.Println()
-		}
+		stats.DisplayStats(categorized)
 
 		// Save preview to file if requested
 		if outputFile != "" {
