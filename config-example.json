@@ -1,0 +1,854 @@
+{
+  "categories": [
+    {
+      "name": "oneshots",
+      "priority": 1,
+      "keywords": [
+        "oneshot",
+        "one-shot",
+        "hit",
+        "stab",
+        "shot"
+      ],
+      "subcategories": {
+        "bass": [
+          "bass shot",
+          "bass_shot",
+          "bass stab",
+          "bass_stab",
+          "bass hit",
+          "bass_hit",
+          "bassshot"
+        ],
+        "synth": [
+          "synth shot",
+          "synth_shot",
+          "synth stab",
+          "synth_stab",
+          "synthshot"
+        ],
+        "vocal": [
+          "vocal shot",
+          "vocal_shot"
+        ],
+        "drum": [
+          "drum hit",
+          "drum_hit",
+          "drum stab",
+          "drum_stab"
+        ],
+        "melodic": [
+          "melodic stab",
+          "melodic_stab"
+        ],
+        "general": [
+          "oneshot",
+          "one-shot",
+          "one_shot",
+          "hit",
+          "stab",
+          "shot"
+        ]
+      }
+    },
+    {
+      "name": "drums",
+      "priority": 2,
+      "keywords": [
+        "kick",
+        "snare",
+        "hihat",
+        "hi-hat",
+        "hi_hat",
+        "hi hat",
+        "hats",
+        "clap",
+        "tom",
+        "cymbal",
+        "crash",
+        "ride",
+        "drum",
+        "bd",
+        "sd",
+        "hh",
+        "closed hat",
+        "open hat",
+        "hat closed",
+        "hat open",
+        "sidestick",
+        "side stick",
+        "rimshot",
+        "rim shot",
+        "cup",
+        "rim",
+        "cym",
+        "china",
+        "crossstick",
+        "cross stick"
+      ],
+      "subcategories": {
+        "kick": [
+          "kick",
+          "bd"
+        ],
+        "snare": [
+          "snare",
+          "sd"
+        ],
+        "hihat": [
+          "hihat",
+          "hi-hat",
+          "hi_hat",
+          "hi hat",
+          "hh",
+          "hats",
+          "closed hat",
+          "open hat",
+          "hat closed",
+          "hat open"
+        ],
+        "clap": [
+          "clap"
+        ],
+        "tom": [
+          "tom",
+          "toms"
+        ],
+        "cymbal": [
+          "cymbal",
+          "crash",
+          "ride",
+          "cup",
+          "cym",
+          "china"
+        ],
+        "rimshot": [
+          "sidestick",
+          "side stick",
+          "rimshot",
+          "rim shot",
+          "crossstick",
+          "cross stick",
+          "rim"
+        ],
+        "fill": [
+          "drum fill",
+          "drum_fill"
+        ],
+        "loop": [
+          "drum loop",
+          "drum_loop",
+          "beat loop",
+          "beat_loop"
+        ],
+        "ethnic": [
+          "ethnic drum",
+          "ethnic_drum",
+          "indian drum",
+          "indian_drum",
+          "tribal drum",
+          "tribal_drum"
+        ],
+        "acoustic": [
+          "acoustic drum",
+          "acoustic_drum"
+        ],
+        "cinematic": [
+          "cinematic drum",
+          "cinematic_drum",
+          "cinematic"
+        ]
+      }
+    },
+    {
+      "name": "bass",
+      "priority": 3,
+      "keywords": [
+        "bass",
+        "sub",
+        "808",
+        "909"
+      ],
+      "subcategories": {
+        "sub": [
+          "sub",
+          "subbass",
+          "sub-bass",
+          "sub_bass"
+        ],
+        "808": [
+          "808"
+        ],
+        "909": [
+          "909"
+        ],
+        "growl": [
+          "growl",
+          "wobble",
+          "whomp",
+          "freak"
+        ],
+        "loop": [
+          "bass loop",
+          "bass_loop",
+          "bassloop"
+        ],
+        "psy": [
+          "psy",
+          "psy bass",
+          "psy_bass",
+          "psybass"
+        ],
+        "pluck": [
+          "bass pluck",
+          "bass_pluck",
+          "pluck bass",
+          "pluck_bass",
+          "plucked bass",
+          "plucked_bass"
+        ]
+      }
+    },
+    {
+      "name": "percussion",
+      "priority": 4,
+      "keywords": [
+        "perc",
+        "percussion",
+        "shaker",
+        "conga",
+        "bongo",
+        "tambourine",
+        "tamb",
+        "cowbell",
+        "cabasa",
+        "clave",
+        "claves",
+        "agogo",
+        "timbale",
+        "timpani",
+        "maracas",
+        "maraca",
+        "woodblock",
+        "wood block",
+        "triangle",
+        "guiro",
+        "djembe",
+        "udu",
+        "brush",
+        "chk",
+        "cowb"
+      ],
+      "subcategories": {
+        "shaker": [
+          "shaker",
+          "shake"
+        ],
+        "conga": [
+          "conga",
+          "congas"
+        ],
+        "bongo": [
+          "bongo"
+        ],
+        "tambourine": [
+          "tambourine",
+          "tamb"
+        ],
+        "cowbell": [
+          "cowbell",
+          "cow bell",
+          "cowb"
+        ],
+        "cabasa": [
+          "cabasa"
+        ],
+        "clave": [
+          "clave",
+          "claves"
+        ],
+        "agogo": [
+          "agogo"
+        ],
+        "timbale": [
+          "timbale"
+        ],
+        "timpani": [
+          "timpani"
+        ],
+        "maracas": [
+          "maracas",
+          "maraca"
+        ],
+        "woodblock": [
+          "woodblock",
+          "wood block"
+        ],
+        "triangle": [
+          "triangle"
+        ],
+        "guiro": [
+          "guiro"
+        ],
+        "djembe": [
+          "djembe"
+        ],
+        "udu": [
+          "udu"
+        ],
+        "brush": [
+          "brush"
+        ],
+        "miscellaneous": [
+          "chk"
+        ],
+        "high": [
+          "hi perc",
+          "hi_perc",
+          "high perc",
+          "high_perc",
+          "high percussion",
+          "high_percussion",
+          "percussion high",
+          "percussion_high"
+        ],
+        "low": [
+          "low perc",
+          "low_perc",
+          "low percussion",
+          "low_percussion",
+          "percussion low",
+          "percussion_low"
+        ],
+        "mid": [
+          "mid perc",
+          "mid_perc",
+          "mid percussion",
+          "mid_percussion",
+          "percussion mid",
+          "percussion_mid"
+        ],
+        "loop": [
+          "percussion loop",
+          "percussion_loop",
+          "perc loop",
+          "perc_loop"
+        ],
+        "rimshot": [
+          "rimshot",
+          "rim shot",
+          "rim_shot",
+          "rim"
+        ],
+        "clank": [
+          "clank",
+          "metal perc",
+          "metal_perc",
+          "metallic"
+        ],
+        "wood": [
+          "wooden",
+          "wood perc",
+          "wood_perc",
+          "wooden perc",
+          "wooden_perc"
+        ],
+        "slap": [
+          "slap",
+          "percussion slap",
+          "percussion_slap"
+        ],
+        "knock": [
+          "knock",
+          "percussion knock",
+          "percussion_knock"
+        ],
+        "beatbox": [
+          "beatbox",
+          "beat box",
+          "beat_box"
+        ],
+        "ethnic": [
+          "ethnic perc",
+          "ethnic_perc",
+          "tribal perc",
+          "tribal_perc",
+          "african perc",
+          "african_perc",
+          "indian perc",
+          "indian_perc"
+        ]
+      }
+    },
+    {
+      "name": "vocals",
+      "priority": 5,
+      "keywords": [
+        "vocal",
+        "vox",
+        "voice",
+        "acapella",
+        "choir",
+        "shout",
+        "chant",
+        "adlib"
+      ],
+      "subcategories": {
+        "vocal": [
+          "vocal"
+        ],
+        "vox": [
+          "vox"
+        ],
+        "voice": [
+          "voice"
+        ],
+        "acapella": [
+          "acapella"
+        ],
+        "choir": [
+          "choir",
+          "chorus",
+          "ensemble"
+        ],
+        "shout": [
+          "shout",
+          "yell",
+          "scream"
+        ],
+        "chant": [
+          "chant",
+          "chanting"
+        ],
+        "adlib": [
+          "adlib",
+          "ad-lib",
+          "ad lib"
+        ]
+      }
+    },
+    {
+      "name": "synth",
+      "priority": 6,
+      "keywords": [
+        "synth",
+        "lead",
+        "pad",
+        "pluck",
+        "saw",
+        "square",
+        "sine"
+      ],
+      "subcategories": {
+        "lead": [
+          "lead",
+          "leads",
+          "synth lead",
+          "synth_lead"
+        ],
+        "pad": [
+          "pad",
+          "pads",
+          "synth pad",
+          "synth_pad"
+        ],
+        "pluck": [
+          "pluck",
+          "plucks",
+          "plucked",
+          "synth pluck",
+          "synth_pluck"
+        ],
+        "saw": [
+          "saw",
+          "sawtooth"
+        ],
+        "square": [
+          "square"
+        ],
+        "sine": [
+          "sine"
+        ],
+        "loop": [
+          "synth loop",
+          "synth_loop",
+          "synthloop"
+        ],
+        "reverse": [
+          "reverse synth",
+          "reverse_synth",
+          "reversed"
+        ],
+        "fill": [
+          "synth fill",
+          "synth_fill",
+          "synthfill"
+        ],
+        "arp": [
+          "arp",
+          "arpeggio",
+          "arpeggiated"
+        ],
+        "blip": [
+          "blip",
+          "beep",
+          "bleep"
+        ]
+      }
+    },
+    {
+      "name": "melodic",
+      "priority": 7,
+      "keywords": [
+        "piano",
+        "guitar",
+        "bell",
+        "marimba",
+        "xylophone",
+        "harp",
+        "strings",
+        "violin",
+        "cello",
+        "flute",
+        "horn",
+        "trumpet",
+        "sax",
+        "saxophone",
+        "organ",
+        "keys",
+        "brass",
+        "woodwind",
+        "arpeggio",
+        "arpeggiated",
+        "melody",
+        "oud",
+        "bouzouki",
+        "duduk",
+        "glissentar",
+        "joombush",
+        "mandolin",
+        "mandolino",
+        "wurli",
+        "wurlitzer",
+        "clav",
+        "clavinet",
+        "accordion",
+        "chime",
+        "chimes"
+      ],
+      "subcategories": {
+        "piano": [
+          "piano"
+        ],
+        "guitar": [
+          "guitar",
+          "gtr",
+          "acoustic guitar",
+          "electric guitar"
+        ],
+        "bell": [
+          "bell",
+          "chime",
+          "chimes"
+        ],
+        "marimba": [
+          "marimba"
+        ],
+        "xylophone": [
+          "xylophone"
+        ],
+        "harp": [
+          "harp"
+        ],
+        "strings": [
+          "strings",
+          "string",
+          "violin",
+          "cello",
+          "viola"
+        ],
+        "woodwind": [
+          "flute",
+          "clarinet",
+          "oboe",
+          "sax",
+          "saxophone",
+          "woodwind"
+        ],
+        "brass": [
+          "horn",
+          "trumpet",
+          "trombone",
+          "brass"
+        ],
+        "keys": [
+          "organ",
+          "keys",
+          "keyboard",
+          "wurli",
+          "wurlitzer",
+          "clav",
+          "clavinet"
+        ],
+        "oud": [
+          "oud"
+        ],
+        "bouzouki": [
+          "bouzouki"
+        ],
+        "duduk": [
+          "duduk"
+        ],
+        "glissentar": [
+          "glissentar"
+        ],
+        "joombush": [
+          "joombush"
+        ],
+        "mandolin": [
+          "mandolin",
+          "mandolino"
+        ],
+        "accordion": [
+          "accordion"
+        ]
+      }
+    },
+    {
+      "name": "fx",
+      "priority": 8,
+      "keywords": [
+        "fx",
+        "sfx",
+        "riser",
+        "downsweep",
+        "whoosh",
+        "impact",
+        "sweep",
+        "noise",
+        "white",
+        "reverse",
+        "rev",
+        "glitch",
+        "tone",
+        "envelope",
+        "pulse",
+        "ufo",
+        "bleeps",
+        "sync",
+        "click"
+      ],
+      "subcategories": {
+        "riser": [
+          "riser",
+          "uplift",
+          "risefx"
+        ],
+        "downsweep": [
+          "downsweep"
+        ],
+        "whoosh": [
+          "whoosh"
+        ],
+        "impact": [
+          "impact",
+          "boom",
+          "slam"
+        ],
+        "sweep": [
+          "sweep",
+          "uplifter"
+        ],
+        "noise": [
+          "noise",
+          "white",
+          "white noise",
+          "pink noise"
+        ],
+        "reverse": [
+          "reverse",
+          "rev"
+        ],
+        "game": [
+          "game",
+          "video game"
+        ],
+        "psy": [
+          "psy",
+          "psychedelic"
+        ],
+        "transformer": [
+          "transformer",
+          "robot"
+        ],
+        "laser": [
+          "laser",
+          "lazer"
+        ],
+        "water": [
+          "water",
+          "splash",
+          "ocean"
+        ],
+        "glitch": [
+          "glitch"
+        ],
+        "tone": [
+          "tone"
+        ],
+        "envelope": [
+          "envelope"
+        ],
+        "pulse": [
+          "pulse"
+        ],
+        "ufo": [
+          "ufo"
+        ],
+        "blip": [
+          "bleeps"
+        ],
+        "sync": [
+          "sync"
+        ],
+        "click": [
+          "click"
+        ]
+      }
+    },
+    {
+      "name": "transition",
+      "priority": 9,
+      "keywords": [
+        "fill",
+        "transition",
+        "build",
+        "buildup",
+        "build-up",
+        "breakdown",
+        "break-down",
+        "downlifter",
+        "stop"
+      ],
+      "subcategories": {
+        "fill": [
+          "fill"
+        ],
+        "transition": [
+          "transition"
+        ],
+        "buildup": [
+          "build",
+          "buildup",
+          "build-up"
+        ],
+        "breakdown": [
+          "breakdown",
+          "break-down"
+        ],
+        "downlifter": [
+          "downlifter"
+        ],
+        "stop": [
+          "stop"
+        ]
+      }
+    },
+    {
+      "name": "ambiance",
+      "priority": 10,
+      "keywords": [
+        "ambiance",
+        "ambient",
+        "atmosphere",
+        "drone",
+        "texture",
+        "atmospheric"
+      ],
+      "subcategories": {
+        "dark": [
+          "dark"
+        ],
+        "bright": [
+          "bright"
+        ],
+        "space": [
+          "space"
+        ],
+        "nature": [
+          "nature"
+        ],
+        "industrial": [
+          "industrial"
+        ]
+      }
+    },
+    {
+      "name": "foley",
+      "priority": 11,
+      "keywords": [
+        "foley",
+        "bird",
+        "animal",
+        "water",
+        "splash",
+        "scratch",
+        "vinyl",
+        "snap",
+        "whistle",
+        "ocean",
+        "nature",
+        "wind"
+      ],
+      "subcategories": {
+        "nature": [
+          "bird",
+          "wind"
+        ],
+        "animal": [
+          "animal"
+        ],
+        "water": [
+          "water",
+          "splash",
+          "ocean"
+        ],
+        "vinyl": [
+          "scratch",
+          "vinyl"
+        ],
+        "human": [
+          "snap",
+          "whistle"
+        ],
+        "mechanical": [
+          "mechanical"
+        ]
+      }
+    },
+    {
+      "name": "loops",
+      "priority": 12,
+      "keywords": [
+        "loop",
+        "phrase",
+        "bar",
+        "beat"
+      ],
+      "subcategories": {
+        "loop": [
+          "loop"
+        ],
+        "phrase": [
+          "phrase"
+        ],
+        "bar": [
+          "bar"
+        ],
+        "beat": [
+          "beat"
+        ]
+      }
+    }
+  ]
+}

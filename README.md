@@ -5,6 +5,7 @@ A simple CLI tool to organize audio sample files by automatically categorizing t
 ## Features
 
 - **Automatic Categorization**: Intelligently categorizes samples based on filename keywords
+- **External Configuration**: Customize categories and subcategories via JSON configuration files
 - **Non-Destructive**: Original files remain untouched; copies are made to the target directory
 - **Preview Mode**: See how files will be organized before applying changes
 - **Multiple Audio Formats**: Supports WAV, MP3, FLAC, AIF, AIFF, OGG, M4A, WMA, and AAC
@@ -25,6 +26,77 @@ Sample Shifter automatically categorizes files into the following categories:
 - **loops**: drum loops, phrases, beats
 - **oneshots**: one-shot samples, hits, stabs
 - **uncategorized**: files that don't match any category
+
+## Configuration
+
+Sample Shifter supports external JSON configuration files to customize categories and subcategories. This allows you to define your own organizational structure without modifying the source code.
+
+### Using Custom Configuration
+
+To use a custom configuration file, pass the `--config` (or `-c`) flag to the `preview` or `apply` commands:
+
+```bash
+./sample-shifter preview /path/to/samples --target /path/to/organized --config my-config.json
+./sample-shifter apply /path/to/samples --target /path/to/organized --config my-config.json
+```
+
+If no configuration file is specified, Sample Shifter uses the default built-in configuration.
+
+### Configuration File Format
+
+The configuration file is a JSON file with the following structure:
+
+```json
+{
+  "categories": [
+    {
+      "name": "drums",
+      "priority": 1,
+      "keywords": ["kick", "snare", "hihat", "drum"],
+      "subcategories": {
+        "kick": ["kick"],
+        "snare": ["snare"],
+        "hihat": ["hihat", "hi-hat"]
+      }
+    },
+    {
+      "name": "bass",
+      "priority": 2,
+      "keywords": ["bass", "sub", "808"],
+      "subcategories": {
+        "sub": ["sub", "subbass"]
+      }
+    }
+  ]
+}
+```
+
+#### Configuration Fields
+
+- **name** (required): The category folder name
+- **priority** (required): Lower numbers = higher priority (checked first)
+- **keywords** (required): Array of keywords to match in filenames
+- **subcategories** (optional): Map of subcategory folder names to keyword arrays
+
+### Example Configuration
+
+A complete example configuration file is available in the repository: [`config-example.json`](config-example.json)
+
+This example includes all the default categories and subcategories that Sample Shifter uses internally.
+
+### Creating Your Own Configuration
+
+1. Start with the example configuration file
+2. Modify categories, priorities, and keywords as needed
+3. Add or remove subcategories
+4. Save the file and use it with the `--config` flag
+
+**Tips:**
+- Keywords are case-insensitive
+- The first matching category (by priority order) wins
+- Files that don't match any keywords go to "uncategorized"
+- Lower priority numbers are checked first (priority 1 before priority 2)
+- Use subcategories to further organize files within a category
 
 ## Installation
 
@@ -129,10 +201,15 @@ Previews how files will be categorized and organized.
 **Flags:**
 - `--target, -t`: Target directory for organized samples (required)
 - `--output, -o`: Save preview to JSON file
+- `--normalize`: Normalize filenames (lowercase, spaces and underscores to dashes)
+- `--config, -c`: Path to category configuration JSON file (optional)
 
 **Example:**
 ```bash
 ./sample-shifter preview /path/to/samples --target /path/to/organized --output preview.json
+
+# With custom configuration
+./sample-shifter preview /path/to/samples --target /path/to/organized --config my-config.json
 ```
 
 #### `apply [source-directory]`
@@ -146,6 +223,9 @@ Applies categorization and copies files to the target directory.
 - `--target, -t`: Target directory for organized samples (required if not using --preview-file)
 - `--preview-file, -p`: Use a previously saved preview file
 - `--dry-run`: Preview what would be done without actually copying files
+- `--normalize`: Normalize filenames (lowercase, spaces and underscores to dashes)
+- `--clean`: Clean target directory before copying files (requires confirmation)
+- `--config, -c`: Path to category configuration JSON file (optional)
 
 **Examples:**
 ```bash
@@ -157,6 +237,9 @@ Applies categorization and copies files to the target directory.
 
 # Dry run
 ./sample-shifter apply /path/to/samples --target /path/to/organized --dry-run
+
+# With custom configuration
+./sample-shifter apply /path/to/samples --target /path/to/organized --config my-config.json
 ```
 
 ## Examples
