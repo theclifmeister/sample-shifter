@@ -2,6 +2,7 @@ package stats
 
 import (
 	"fmt"
+	"sort"
 
 	"github.com/theclifmeister/sample-shifter/internal/categorizer"
 )
@@ -40,14 +41,10 @@ func DisplayStats(categorized []categorizer.CategorizedFile) {
 	for cat, files := range categoryGroups {
 		categoryCounts = append(categoryCounts, categoryCount{cat, len(files)})
 	}
-	// Simple bubble sort by count
-	for i := 0; i < len(categoryCounts)-1; i++ {
-		for j := 0; j < len(categoryCounts)-i-1; j++ {
-			if categoryCounts[j].count < categoryCounts[j+1].count {
-				categoryCounts[j], categoryCounts[j+1] = categoryCounts[j+1], categoryCounts[j]
-			}
-		}
-	}
+	// Sort by count (descending)
+	sort.Slice(categoryCounts, func(i, j int) bool {
+		return categoryCounts[i].count > categoryCounts[j].count
+	})
 
 	// Display statistics summary
 	fmt.Println("=== CATEGORIZATION STATISTICS ===")
@@ -85,14 +82,10 @@ func DisplayStats(categorized []categorizer.CategorizedFile) {
 		for subcat, files := range subcats {
 			subcatCounts = append(subcatCounts, subcatCount{subcat, len(files)})
 		}
-		// Simple bubble sort
-		for i := 0; i < len(subcatCounts)-1; i++ {
-			for j := 0; j < len(subcatCounts)-i-1; j++ {
-				if subcatCounts[j].count < subcatCounts[j+1].count {
-					subcatCounts[j], subcatCounts[j+1] = subcatCounts[j+1], subcatCounts[j]
-				}
-			}
-		}
+		// Sort by count (descending)
+		sort.Slice(subcatCounts, func(i, j int) bool {
+			return subcatCounts[i].count > subcatCounts[j].count
+		})
 
 		for _, sc := range subcatCounts {
 			percentage := float64(sc.count) * 100.0 / float64(categoryTotal)
@@ -123,14 +116,10 @@ func DisplayDetailedFileList(categorized []categorizer.CategorizedFile) {
 	for cat, files := range categoryGroups {
 		categoryCounts = append(categoryCounts, categoryCount{cat, len(files)})
 	}
-	// Simple bubble sort by count
-	for i := 0; i < len(categoryCounts)-1; i++ {
-		for j := 0; j < len(categoryCounts)-i-1; j++ {
-			if categoryCounts[j].count < categoryCounts[j+1].count {
-				categoryCounts[j], categoryCounts[j+1] = categoryCounts[j+1], categoryCounts[j]
-			}
-		}
-	}
+	// Sort by count (descending)
+	sort.Slice(categoryCounts, func(i, j int) bool {
+		return categoryCounts[i].count > categoryCounts[j].count
+	})
 
 	// Display detailed file list
 	fmt.Println("=== DETAILED FILE LIST ===")
