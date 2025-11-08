@@ -7,6 +7,12 @@ import (
 	"github.com/theclifmeister/sample-shifter/internal/categorizer"
 )
 
+// categoryCount is a helper struct for sorting categories by count
+type categoryCount struct {
+	category categorizer.Category
+	count    int
+}
+
 // DisplayStats shows categorization statistics for a set of categorized files
 func DisplayStats(categorized []categorizer.CategorizedFile) {
 	if len(categorized) == 0 {
@@ -33,10 +39,6 @@ func DisplayStats(categorized []categorizer.CategorizedFile) {
 	totalFiles := len(categorized)
 
 	// Sort categories by count (descending)
-	type categoryCount struct {
-		category categorizer.Category
-		count    int
-	}
 	var categoryCounts []categoryCount
 	for cat, files := range categoryGroups {
 		categoryCounts = append(categoryCounts, categoryCount{cat, len(files)})
@@ -108,10 +110,6 @@ func DisplayDetailedFileList(categorized []categorizer.CategorizedFile) {
 	}
 
 	// Sort categories by count (descending)
-	type categoryCount struct {
-		category categorizer.Category
-		count    int
-	}
 	var categoryCounts []categoryCount
 	for cat, files := range categoryGroups {
 		categoryCounts = append(categoryCounts, categoryCount{cat, len(files)})
