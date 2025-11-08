@@ -3,8 +3,10 @@ package categorizer
 import (
 	"path/filepath"
 	"regexp"
+	"sort"
 	"strings"
 
+	"github.com/theclifmeister/sample-shifter/internal/config"
 	"github.com/theclifmeister/sample-shifter/internal/scanner"
 )
 
@@ -33,6 +35,28 @@ type CategorizedFile struct {
 	Category    Category
 	Subcategory string
 	TargetPath  string
+}
+
+// Categorizer handles the categorization of sample files using a configuration
+type Categorizer struct {
+	config *config.CategoryConfig
+}
+
+// NewCategorizer creates a new Categorizer with the given configuration
+func NewCategorizer(cfg *config.CategoryConfig) *Categorizer {
+	return &Categorizer{
+		config: cfg,
+	}
+}
+
+// NewCategorizerFromFile creates a new Categorizer loading config from a file
+// If configPath is empty, uses the default configuration
+func NewCategorizerFromFile(configPath string) (*Categorizer, error) {
+	cfg, err := config.LoadConfig(configPath)
+	if err != nil {
+		return nil, err
+	}
+	return NewCategorizer(cfg), nil
 }
 
 // categoryPriority defines the order in which categories are checked
@@ -502,22 +526,35 @@ func NormalizeFileName(fileName string) string {
 
 // determineSubcategory checks the filename for subcategory keywords
 // Returns the subcategory based on the longest matching keyword (most specific match)
-func determineSubcategory(category Category, fileName, nameWithoutExt string) string {
-	// Get subcategory map for this category
-	subcatMap, exists := subcategoryKeywords[category]
-	if !exists {
+func (c *Categorizer) determineSubcategory(categoryName string, fileName, nameWithoutExt string) string {
+	// Find the category definition
+	var subcatMap map[string][]string
+	for _, cat := range c.config.Categories {
+		if cat.Name == categoryName {
+			if cat.Subcategories == nil {
+				return ""
+			}
+			subcatMap = cat.Subcategories
+			break
+		}
+	}
+
+	if subcatMap == nil {
 		return ""
 	}
 
 	// Find all matching keywords and prefer the longest one (most specific)
 	var bestMatch string
 	var bestKeyword string
-	for keyword, subfolder := range subcatMap {
-		if strings.Contains(fileName, keyword) || strings.Contains(nameWithoutExt, keyword) {
-			// Prefer longer keywords (more specific matches)
-			if len(keyword) > len(bestKeyword) {
-				bestKeyword = keyword
-				bestMatch = subfolder
+	for subfolder, keywords := range subcatMap {
+		for _, keyword := range keywords {
+			keywordLower := strings.ToLower(keyword)
+			if strings.Contains(fileName, keywordLower) || strings.Contains(nameWithoutExt, keywordLower) {
+				// Prefer longer keywords (more specific matches)
+				if len(keyword) > len(bestKeyword) {
+					bestKeyword = keyword
+					bestMatch = subfolder
+				}
 			}
 		}
 	}
@@ -526,18 +563,20 @@ func determineSubcategory(category Category, fileName, nameWithoutExt string) st
 }
 
 // Categorize determines the category of a sample file based on its name
-func Categorize(sample scanner.SampleFile, targetDir string, normalize bool) CategorizedFile {
+func (c *Categorizer) Categorize(sample scanner.SampleFile, targetDir string, normalize bool) CategorizedFile {
 	fileName := strings.ToLower(sample.FileName)
 	nameWithoutExt := strings.ToLower(strings.TrimSuffix(sample.FileName, sample.Extension))
 
-	category := determineCategory(fileName, nameWithoutExt)
-	subcategory := determineSubcategory(category, fileName, nameWithoutExt)
+	category := c.determineCategory(fileName, nameWithoutExt)
+	subcategory := c.determineSubcategory(category, fileName, nameWithoutExt)
 
 	// If no subcategory found but category has subcategory support, use "uncategorized"
-	if subcategory == "" && category != CategoryUncategorized {
-		_, hasSubcategories := subcategoryKeywords[category]
-		if hasSubcategories {
-			subcategory = "uncategorized"
+	if subcategory == "" && category != "uncategorized" {
+		for _, cat := range c.config.Categories {
+			if cat.Name == category && cat.Subcategories != nil && len(cat.Subcategories) > 0 {
+				subcategory = "uncategorized"
+				break
+			}
 		}
 	}
 
@@ -550,40 +589,61 @@ func Categorize(sample scanner.SampleFile, targetDir string, normalize bool) Cat
 	// Build target path with subcategory
 	var targetPath string
 	if subcategory != "" {
-		targetPath = filepath.Join(targetDir, string(category), subcategory, targetFileName)
+		targetPath = filepath.Join(targetDir, category, subcategory, targetFileName)
 	} else {
-		targetPath = filepath.Join(targetDir, string(category), targetFileName)
+		targetPath = filepath.Join(targetDir, category, targetFileName)
 	}
 
 	return CategorizedFile{
 		Sample:      sample,
-		Category:    category,
+		Category:    Category(category),
 		Subcategory: subcategory,
 		TargetPath:  targetPath,
 	}
 }
 
 // determineCategory checks the filename against category keywords in priority order
-func determineCategory(fileName, nameWithoutExt string) Category {
+func (c *Categorizer) determineCategory(fileName, nameWithoutExt string) string {
+	// Sort categories by priority
+	sortedCategories := make([]config.CategoryDefinition, len(c.config.Categories))
+	copy(sortedCategories, c.config.Categories)
+	sort.Slice(sortedCategories, func(i, j int) bool {
+		return sortedCategories[i].Priority < sortedCategories[j].Priority
+	})
+
 	// Check categories in priority order to ensure deterministic results
-	for _, cat := range categoryPriority {
-		words := keywords[cat]
-		for _, word := range words {
-			if strings.Contains(fileName, word) || strings.Contains(nameWithoutExt, word) {
-				return cat
+	for _, cat := range sortedCategories {
+		for _, keyword := range cat.Keywords {
+			keywordLower := strings.ToLower(keyword)
+			if strings.Contains(fileName, keywordLower) || strings.Contains(nameWithoutExt, keywordLower) {
+				return cat.Name
 			}
 		}
 	}
-	return CategoryUncategorized
+	return "uncategorized"
 }
 
 // CategorizeBatch categorizes multiple sample files
-func CategorizeBatch(samples []scanner.SampleFile, targetDir string, normalize bool) []CategorizedFile {
+func (c *Categorizer) CategorizeBatch(samples []scanner.SampleFile, targetDir string, normalize bool) []CategorizedFile {
 	categorized := make([]CategorizedFile, 0, len(samples))
 
 	for _, sample := range samples {
-		categorized = append(categorized, Categorize(sample, targetDir, normalize))
+		categorized = append(categorized, c.Categorize(sample, targetDir, normalize))
 	}
 
 	return categorized
+}
+
+// Backward-compatible functions that use the default configuration
+
+// Categorize determines the category of a sample file based on its name using the default configuration
+func Categorize(sample scanner.SampleFile, targetDir string, normalize bool) CategorizedFile {
+	c := NewCategorizer(config.GetDefaultConfig())
+	return c.Categorize(sample, targetDir, normalize)
+}
+
+// CategorizeBatch categorizes multiple sample files using the default configuration
+func CategorizeBatch(samples []scanner.SampleFile, targetDir string, normalize bool) []CategorizedFile {
+	c := NewCategorizer(config.GetDefaultConfig())
+	return c.CategorizeBatch(samples, targetDir, normalize)
 }

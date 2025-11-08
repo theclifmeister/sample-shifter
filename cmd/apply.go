@@ -20,6 +20,7 @@ var (
 	dryRun                  bool
 	applyNormalizeFilenames bool
 	cleanTarget             bool
+	applyConfigFile         string
 )
 
 var applyCmd = &cobra.Command{
@@ -74,7 +75,14 @@ or use a previously generated preview file.`,
 				os.Exit(1)
 			}
 
-			categorized = categorizer.CategorizeBatch(samples, applyTargetDir, applyNormalizeFilenames)
+			// Create categorizer with config
+			cat, err := categorizer.NewCategorizerFromFile(applyConfigFile)
+			if err != nil {
+				fmt.Printf("Error loading configuration: %v\n", err)
+				os.Exit(1)
+			}
+
+			categorized = cat.CategorizeBatch(samples, applyTargetDir, applyNormalizeFilenames)
 		}
 
 		if len(categorized) == 0 {
@@ -199,4 +207,5 @@ func init() {
 	applyCmd.Flags().BoolVar(&dryRun, "dry-run", false, "Preview what would be done without actually copying files")
 	applyCmd.Flags().BoolVar(&applyNormalizeFilenames, "normalize", false, "Normalize filenames (lowercase, spaces and underscores to dashes)")
 	applyCmd.Flags().BoolVar(&cleanTarget, "clean", false, "Clean target directory before copying files (requires confirmation)")
+	applyCmd.Flags().StringVarP(&applyConfigFile, "config", "c", "", "Path to category configuration JSON file (optional, uses default if not provided)")
 }

@@ -16,6 +16,7 @@ var (
 	targetDir          string
 	outputFile         string
 	normalizeFilenames bool
+	configFile         string
 )
 
 var previewCmd = &cobra.Command{
@@ -53,8 +54,15 @@ This shows where each file will be copied to when you run the apply command.`,
 			return
 		}
 
+		// Create categorizer with config
+		cat, err := categorizer.NewCategorizerFromFile(configFile)
+		if err != nil {
+			fmt.Printf("Error loading configuration: %v\n", err)
+			os.Exit(1)
+		}
+
 		// Categorize files
-		categorized := categorizer.CategorizeBatch(samples, targetDir, normalizeFilenames)
+		categorized := cat.CategorizeBatch(samples, targetDir, normalizeFilenames)
 
 		// Display initial summary
 		fmt.Printf("Preview: Found %d file(s) to categorize\n\n", len(categorized))
@@ -101,4 +109,5 @@ func init() {
 	previewCmd.Flags().StringVarP(&targetDir, "target", "t", "", "Target directory for organized samples (required)")
 	previewCmd.Flags().StringVarP(&outputFile, "output", "o", "", "Save preview to JSON file for later use with apply command")
 	previewCmd.Flags().BoolVar(&normalizeFilenames, "normalize", false, "Normalize filenames (lowercase, spaces and underscores to dashes)")
+	previewCmd.Flags().StringVarP(&configFile, "config", "c", "", "Path to category configuration JSON file (optional, uses default if not provided)")
 }
