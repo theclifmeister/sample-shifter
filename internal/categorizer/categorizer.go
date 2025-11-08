@@ -139,6 +139,7 @@ var subcategoryKeywords = map[Category]map[string]string{
 		"rim shot":   "rimshot",
 		"crossstick": "rimshot",
 		"cross stick": "rimshot",
+		"rim":        "rimshot",
 		// New subcategories
 		"drum fill":       "fill",
 		"drum_fill":       "fill",
