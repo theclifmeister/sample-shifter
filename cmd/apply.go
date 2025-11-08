@@ -6,6 +6,7 @@ import (
 	"io"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"github.com/spf13/cobra"
 	"github.com/theclifmeister/sample-shifter/internal/categorizer"
@@ -14,10 +15,11 @@ import (
 )
 
 var (
-	applyTargetDir            string
-	previewFile               string
-	dryRun                    bool
-	applyNormalizeFilenames   bool
+	applyTargetDir          string
+	previewFile             string
+	dryRun                  bool
+	applyNormalizeFilenames bool
+	cleanTarget             bool
 )
 
 var applyCmd = &cobra.Command{
@@ -28,6 +30,12 @@ You can either specify a source directory to scan and categorize on-the-fly,
 or use a previously generated preview file.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		var categorized []categorizer.CategorizedFile
+
+		// Require --target flag in all cases
+		if applyTargetDir == "" {
+			fmt.Println("Error: --target flag is required")
+			os.Exit(1)
+		}
 
 		// Load from preview file if provided
 		if previewFile != "" {
@@ -47,11 +55,6 @@ or use a previously generated preview file.`,
 			// Scan and categorize on-the-fly
 			if len(args) != 1 {
 				fmt.Println("Error: source directory required when not using --preview-file")
-				os.Exit(1)
-			}
-
-			if applyTargetDir == "" {
-				fmt.Println("Error: --target flag is required")
 				os.Exit(1)
 			}
 
@@ -77,6 +80,16 @@ or use a previously generated preview file.`,
 		if len(categorized) == 0 {
 			fmt.Println("No files to process.")
 			return
+		}
+
+		// Clean target directory if requested
+		if cleanTarget && !dryRun {
+			if err := cleanDirectory(applyTargetDir); err != nil {
+				fmt.Printf("Error: %v\n", err)
+				os.Exit(1)
+			}
+		} else if cleanTarget && dryRun {
+			fmt.Printf("\n[DRY RUN] Would clean target directory: %s\n", applyTargetDir)
 		}
 
 		if dryRun {
@@ -122,6 +135,35 @@ or use a previously generated preview file.`,
 	},
 }
 
+func cleanDirectory(targetDir string) error {
+	// Check if directory exists
+	if _, err := os.Stat(targetDir); os.IsNotExist(err) {
+		// Directory doesn't exist, nothing to clean
+		return nil
+	}
+
+	// Ask for confirmation
+	fmt.Printf("\n⚠️  WARNING: This will delete all contents in:\n")
+	fmt.Printf("   %s\n\n", targetDir)
+	fmt.Print("Are you sure you want to continue? Type 'yes' to confirm: ")
+
+	var response string
+	fmt.Scanln(&response)
+
+	if strings.ToLower(strings.TrimSpace(response)) != "yes" {
+		return fmt.Errorf("cleaning cancelled by user")
+	}
+
+	// Remove the directory and all its contents
+	fmt.Printf("\nCleaning target directory: %s\n", targetDir)
+	if err := os.RemoveAll(targetDir); err != nil {
+		return fmt.Errorf("failed to clean directory: %w", err)
+	}
+
+	fmt.Println("Target directory cleaned successfully.")
+	return nil
+}
+
 func copyFile(src, dst string) error {
 	// Create target directory if it doesn't exist
 	targetDir := filepath.Dir(dst)
@@ -152,8 +194,9 @@ func copyFile(src, dst string) error {
 }
 
 func init() {
-	applyCmd.Flags().StringVarP(&applyTargetDir, "target", "t", "", "Target directory for organized samples")
+	applyCmd.Flags().StringVarP(&applyTargetDir, "target", "t", "", "Target directory for organized samples (required)")
 	applyCmd.Flags().StringVarP(&previewFile, "preview-file", "p", "", "Use a previously saved preview file")
 	applyCmd.Flags().BoolVar(&dryRun, "dry-run", false, "Preview what would be done without actually copying files")
 	applyCmd.Flags().BoolVar(&applyNormalizeFilenames, "normalize", false, "Normalize filenames (lowercase, spaces and underscores to dashes)")
+	applyCmd.Flags().BoolVar(&cleanTarget, "clean", false, "Clean target directory before copying files (requires confirmation)")
 }
