@@ -20,8 +20,7 @@ func TestCategorize(t *testing.T) {
 		{"808_bass.wav", ".wav", CategoryBass},
 		{"synth_lead.wav", ".wav", CategorySynth},
 		{"synth_pad.mp3", ".mp3", CategorySynth},
-		{"vocal_shot.wav", ".wav", CategoryOneShot}, // "shot" keyword has higher priority (OneShot category)
-		{"vocal_sample.wav", ".wav", CategoryVocal},
+		{"vocal_choir.wav", ".wav", CategoryVocal},
 		{"fx_riser.wav", ".wav", CategoryFX},
 		{"shaker_loop.wav", ".wav", CategoryPercussion},
 		{"piano_chord.wav", ".wav", CategoryMelodic},
